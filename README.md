@@ -17,11 +17,11 @@ A simple, menu-driven Python app to help you build consistent habits — one day
 ---
 🛠️ Getting Started
 1. Clone the Repository
-cd ~/Desktop git clone https://github.com/jondevcodes/habit-tracker.git cd habit-tracker
+cd ~/Desktopgit clone https://github.com/jondevcodes/habit-tracker.gitcd habit-tracker
 2. Run the Application
 python3 habit_tracker.py
 💻 Optional: Virtual Environment Setup
-python3 -m venv venv source venv/bin/activate  # For macOS/Linux venv\Scripts\activate  # For Windows
+python3 -m venv venvsource venv/bin/activate  # For macOS/Linuxvenv\Scripts\activate  # For Windows
 ---
 📬 Connect & Support
 Follow my coding journey on X (formerly Twitter): @jondevcodes
