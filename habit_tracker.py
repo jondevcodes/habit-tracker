@@ -2,58 +2,72 @@ import json
 import os
 from datetime import datetime
 
+HABITS = ["Workout", "Read", "Code"]
+DATA_FILE = "habit_data.json"
 
+def load_data():
+    if not os.path.exists(DATA_FILE):
+        return {}
+    with open(DATA_FILE, "r") as file:
+        return json.load(file)
 
-# File to save habit data
-DATA_FILE = 'habits.json'
+def save_data(data):
+    with open(DATA_FILE, "w") as file:
+        json.dump(data, file, indent=4)
 
-# Default habits you want to track
-default_habits = {
-    "Workout": [],
-    "Read": [],
-    "Code": []
-}
+def log_today(data):
+    today = datetime.now().strftime("%Y-%m-%d")
+    if today in data:
+        print(f"\n📅 You've already logged habits for today ({today}).")
+        return
 
-# Load habits from file or initialize new
-def load_habits():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r') as file:
-            return json.load(file)
-    else:
-        return default_habits.copy()
-
-# Save habits to file
-def save_habits(habits):
-    with open(DATA_FILE, 'w') as file:
-        json.dump(habits, file, indent=4)
-
-# Mark today's habits
-def log_today(habits):
-    today = datetime.now().strftime('%Y-%m-%d')
-    print(f"\nLog for {today}:")
-    
-    for habit in habits:
+    data[today] = {}
+    for habit in HABITS:
         response = input(f"Did you {habit} today? (y/n): ").strip().lower()
-        if response == 'y':
-            if today not in habits[habit]:
-                habits[habit].append(today)
-            else:
-                print(f"🔁 You already logged '{habit}' for today.")
+        data[today][habit] = response == "y"
 
-    save_habits(habits)
-    print("\n✅ Progress saved!\n")
+    save_data(data)
+    print("✅ Progress saved!")
 
-# Show habit progress
-def show_progress(habits):
+def view_progress(data):
     print("\n📊 Your Habit Progress:")
-    for habit, dates in habits.items():
-        print(f"{habit}: {len(dates)} days")
+    totals = {habit: 0 for habit in HABITS}
+    for day in data:
+        for habit in HABITS:
+            if data[day].get(habit):
+                totals[habit] += 1
+    for habit, count in totals.items():
+        print(f"{habit}: {count} days")
 
-# Main CLI
+def reset_data():
+    if os.path.exists(DATA_FILE):
+        os.remove(DATA_FILE)
+    print("🔁 All data has been reset.")
+
 def main():
-    habits = load_habits()
-    show_progress(habits)
-    log_today(habits)
+    while True:
+        print("\n🧠 Habit Tracker Menu:")
+        print("1. View progress")
+        print("2. Log today's habits")
+        print("3. Reset all data")
+        print("4. Exit")
+
+        choice = input("Choose an option (1–4): ").strip()
+        data = load_data()
+
+        if choice == "1":
+            view_progress(data)
+        elif choice == "2":
+            log_today(data)
+        elif choice == "3":
+            confirm = input("Are you sure you want to reset all data? (y/n): ").strip().lower()
+            if confirm == "y":
+                reset_data()
+        elif choice == "4":
+            print("👋 Goodbye!")
+            break
+        else:
+            print("❌ Invalid choice. Please enter 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     main()
