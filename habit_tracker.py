@@ -2,6 +2,8 @@ import json
 import os
 from datetime import datetime
 
+
+
 # File to save habit data
 DATA_FILE = 'habits.json'
 
@@ -32,8 +34,11 @@ def log_today(habits):
     
     for habit in habits:
         response = input(f"Did you {habit} today? (y/n): ").strip().lower()
-        if response == 'y' and today not in habits[habit]:
-            habits[habit].append(today)
+        if response == 'y':
+            if today not in habits[habit]:
+                habits[habit].append(today)
+            else:
+                print(f"🔁 You already logged '{habit}' for today.")
 
     save_habits(habits)
     print("\n✅ Progress saved!\n")
